@@ -1,0 +1,133 @@
+===== Project Description =====
+The goal of this project is to create a website that looks like an official database, containing all 2^63 possible combinations of NCAA Division 1 basketball tournament brackets.
+
+===== Background =====
+The NCAA Division 1 basketball tournament, commonly referred to as March Madness, is a 63-game tournament that decides the national champion each year. As one of the most widely recognized sporting events in the United States, its arrival signals the annual tradition in which millions of fans submit their tournament predictions to casual competition pools, both in person and online. While technically consisting of 67 games, I will be excluding the play-in games from this discussion, since a majority of the popular March Madness competitions begin with the Round of 64. 
+
+The high-stakes single elimination format creates a chaotic environment in which upsets, games in which a weaker team eliminates a stronger team, are commonplace. Failure to recognize these upsets in the early rounds of the tournament tend to invalidate entire branches of bracket predictions. In recognition of the astronomically low odds that any bracket prediction is perfectly correct, generous rewards are promised to those who take on the challenge: Warren Buffet, former CEO of Berkshire Hathaway, famously offered $1 billion in 2014 and the SpaceX aerospace company announced that the 2025 grand prize winner would receive a trip to Mars.
+
+===== Purpose =====
+The purpose of this website is to take advantage of a simple trick. It would be nearly impossible, and certainly inconceivably costly, to truly generate and store all March Madness brackets in a database. However, the permutations can be well-ordered and searched consistently. One might argue that a database is just a well-ordered and consistent storage method to organize and retrieve data. This website will do exactly that, but will use a reversible algorithm to generate and retrieve the data in real time. Using this technique, we aim to emulate what such a database would truly look like. However, we will NOT lie about this project; we will respect the intelligence of our users to ensure that they understand that it is unrealistic to pre-compute such data.
+
+===== Similar Examples =====
+The website that made me believe that this project was possible is the Library of Babel. Link here: https://libraryofbabel.info/ 
+It comes from an academic perspective, simulating the Library of Babel in which all conceivable strings of 3200 characters are contained in the website. Users can browse the archives systematically, randomly, or search for specific text. It is relatively simple in appearance, and each page has a small number of options for navigation. https://libraryofbabel.info/ shall be used as a guide for this project. We will not be recreating the Library of Babel, but will be using it as a starting point. We want all decisions to support the NCAA Division 1 basketball tournament aspect of the project. 
+
+===== Vision =====
+This project will hopefully capture the curiosity of those truly wishing to understand the seemingly unbounded growth that comes with the analysis of permutations. Users will be able to browse the database randomly, search for specific brackets, and see the statistically most-likely bracket. When the users finds a bracket of interest, they should be able to share the link directly to their bracket on popular social media websites. 
+
+===== User Experience =====
+Because database exploration is not typically perceived as an enjoyable experience, we want to make this website fun and easy to interact with. It should encourage those navigating the webiste to marvel at the scale of possibilities. We also want to give more stat-interested users the ability to understand how likely (or rather, how unlikely) each bracket is. Each team will be assigned an ELO score. Calculating win percentage through ELO scores is a simple equation. Interested users will be able to see the probability of each game. 
+
+At the home page, the user will be met with the following options:
+
+>> Find a Bracket:
+A simple march madness builder. Allows users to search for partial or complete brackets. When users search for partial brackets, there will be missing values in the 63 bit binary string. However, if only 30 games are filled out in the bracket, that means that there are 33 games that have not been selected. We know that there are 2^33 possibilities remaining. Their binary and decimal representations will be the same as any other bracket if we had selected the "Browse" option (below). 
+
+>> Search:
+Brackets on this website will be numbered from 0 to 9,223,372,036,854,775,807. A user will be able to search for any integer in this range and will always be directed to the same bracket. 
+
+>> View Most Likely Bracket:
+The user is taken to the bracket that is most likely to occur, given the team ELO ratings at the beginning of the tournament.
+
+>> Browse:
+Allows the user to click through pages with a table containing 100 brackets per page. While browsing, a preview of each bracket will be available upon hover. "Find a Bracket" will take the users here as well, but to a filtered version.
+
+>> Random:
+A random integer on the range 0 to 9,223,372,036,854,775,807 will be chosen at random, and the user will be directed to that bracket.
+
+When browsing through brackets, a simple thumbnail, dynamically generated from the bracket number shall be shown. When the user hovers over the thumbnail, the bracket shall grow larger, inviting the user to click on it.
+100 brackets shall be shown per page, and users should be able to navigate through the pages using simple buttons. It should be possible to navigate to any page number using a url or the search option.
+The trick behind this website is that 100 brackets shown per page would be literally impossible to generate and store in a database. However, it is possible to generate and store the brackets in a way that is easy to navigate and search. When creating page navigation buttons (similar to that on a shopping website), we will show the current page number (likely an incredibly large number), Previous and Next page buttons, and a textbox for allowing the user to enter a page number and navigate to it.
+To continuously show the scale of the website to the user, we should always let the user know that they can jump back to page 1 (the first page) by clicking on the page 1 button and page 92,233,720,368,547,759 ((9,223,372,036,854,775,807 / 100) + 1) by clicking on the page 92,233,720,368,547,759 button.
+It should look as if there are that many pages, while obviously they are generated in real time.
+
+===== Design =====
+The website should be designed such that users feel as if they are navigating an actual database. The user interface should be as simple and as quick as possible; the minimum necessary buttons and links should be available and nothing else. Ideally, one should be able to navigate the website without even really knowing how to read, let alone develop a SQL query. But ideally, we aim to make the user feel like they are doing something scientific. 
+
+We shall use a color-blind friendly color palette where appropriate. 
+
+Brackets shall be shown in a traditional, but visually appealing way. The logo for each school shall be shown on the left side of the team name and seed. Because these brackets are large, users should be able navigate the bracket in several ways. Users might be able to zoom in, zoom out, and scroll left and right. Additionally, if needed, users may want to narrow their view to view only a specific round or region. Please model this after the ESPN website here: https://www.espn.com/mens-college-basketball/bracket
+
+The code written to visualize the bracket shall be highly documented and easy to tweak. 
+
+===== Tech Stack =====
+The website shall be built using Django for the backend. A modern frontend framework like React or Vue.js shall be used for the frontend. Tailwind CSS shall be used for styling.
+
+===== Legal Notes =====
+Many March Madness related terms and logos are protected by copyright. We will not use any copyrighted material without permission. We will not use any copyrighted material in a way that is not permitted by the copyright holder. Avoid phrases like "March Madness", "First Four", "Elite Eight", "Final Four", etc. Use generic terms like "tournament", "bracket", "round", "region", etc.
+
+===== Examples =====
+The python_example.ipynb file contains an example of how to generate a bracket from a decimal number. Visual examples of a bracket can be found here: https://www.espn.com/mens-college-basketball/bracket
+
+===== Tournament Roster =====
+The tournament roster may be subject to change. It will exist in teams.txt.
+
+Seed	Region	Team	Hyperlink Name
+1	East	Duke	duke	
+16	East	Siena	siena	
+8	East	Ohio State	ohio-state	
+9	East	TCU	texas-christian	
+5	East	St. John's (NY)	st-johns-ny	
+12	East	Northern Iowa	northern-iowa	
+4	East	Kansas	kansas	
+13	East	California Baptist	california-baptist	
+6	East	Louisville	louisville	
+11	East	South Florida	south-florida	
+3	East	Michigan State	michigan-state	
+14	East	North Dakota State	north-dakota-state	
+7	East	UCLA	ucla	
+10	East	UCF	central-florida	
+2	East	Connecticut	connecticut	
+15	East	Furman	furman	
+1	South	Florida	florida	
+16	South	Prairie View	prairie-view	
+8	South	Clemson	clemson	
+9	South	Iowa	iowa	
+5	South	Vanderbilt	vanderbilt	
+12	South	McNeese State	mcneese-state	
+4	South	Nebraska	nebraska	
+13	South	Troy	troy	
+6	South	North Carolina	north-carolina	
+11	South	Virginia Commonwealth	virginia-commonwealth	
+3	South	Illinois	illinois	
+14	South	Pennsylvania	pennsylvania	
+7	South	Saint Mary's (CA)	saint-marys-ca	
+10	South	Texas A&M	texas-am	
+2	South	Houston	houston	
+15	South	Idaho	idaho	
+1	West	Arizona	arizona	
+16	West	Long Island University	long-island-university	
+8	West	Villanova	villanova	
+9	West	Utah State	utah-state	
+5	West	Wisconsin	wisconsin	
+12	West	High Point	high-point	
+4	West	Arkansas	arkansas	
+13	West	Hawaii	hawaii	
+6	West	Brigham Young	brigham-young	
+11	West	Texas	texas	
+3	West	Gonzaga	gonzaga	
+14	West	Kennesaw State	kennesaw-state	
+7	West	Miami (FL)	miami-fl	
+10	West	Missouri	missouri	
+2	West	Purdue	purdue	
+15	West	Queens (NC)	queens-nc	
+1	Midwest	Michigan	michigan	
+16	Midwest	Howard	howard
+8	Midwest	Georgia	georgia	
+9	Midwest	Saint Louis	saint-louis	
+5	Midwest	Texas Tech	texas-tech	
+12	Midwest	Akron	akron	
+4	Midwest	Alabama	alabama	
+13	Midwest	Hofstra	hofstra	
+6	Midwest	Tennessee	tennessee	
+11	Midwest	Miami (OH)	miami-oh	
+3	Midwest	Virginia	virginia	
+14	Midwest	Wright State	wright-state	
+7	Midwest	Kentucky	kentucky	
+10	Midwest	Santa Clara	santa-clara	
+2	Midwest	Iowa State	iowa-state	
+15	Midwest	Tennessee State	tennessee-state	
+
+A logo for every team can be found by using a simple formula in Excel: =IMAGE(CONCAT("https://cdn.ssref.net/req/202510241/tlogo/ncaa/",TEXT([@[Hyperlink Name]],),"-2025.png"))
+This shall be done for each team in the tournament roster and saved as a .png file in the static/images/teams folder. to be used in the website.

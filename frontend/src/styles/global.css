@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #0d0f14;
+  --surface: #151820;
+  --border: #252a35;
+  --text: #c8cdd8;
+  --text-muted: #5a6070;
+  --accent: #4a9eff;
+  --accent-warm: #f5a623;
+  --win: #2dd4a0;
+  --loss: #3d4252;
+  --danger: #e05c5c;
+  /* Winner half of a matchup row (lighter wash + inset ring in GameSlot) */
+  --matchup-winner-bg: rgba(74, 158, 255, 0.14);
+}
+
+html,
+body {
+  height: 100%;
+}
+
