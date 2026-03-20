@@ -1,92 +1,47 @@
-// Team roster constants for the frontend bracket engine.
-// Mirrors `backend/brackets/teams.py`.
-import { ELO_BY_SLUG } from "./eloRatings.generated.js";
+import { ELO_BY_SLUG_MEN } from "./eloRatingsMen.generated.js";
+import { ELO_BY_SLUG_WOMEN } from "./eloRatingsWomen.generated.js";
+import { REGIONS_MEN, TEAMS_MEN } from "./teamsMen.js";
+import { REGIONS_WOMEN, TEAMS_WOMEN } from "./teamsWomen.js";
+import { TOURNAMENTS, getSelectedTournament } from "./tournamentState.js";
 
-export const REGIONS = ["East", "South", "West", "Midwest"];
-
-// (seed, region, name, slug)
-export const TEAMS = [
-  [1, "East", "Duke", "duke"],
-  [16, "East", "Siena", "siena"],
-  [8, "East", "Ohio State", "ohio-state"],
-  [9, "East", "TCU", "texas-christian"],
-  [5, "East", "St. John's (NY)", "st-johns-ny"],
-  [12, "East", "Northern Iowa", "northern-iowa"],
-  [4, "East", "Kansas", "kansas"],
-  [13, "East", "California Baptist", "california-baptist"],
-  [6, "East", "Louisville", "louisville"],
-  [11, "East", "South Florida", "south-florida"],
-  [3, "East", "Michigan State", "michigan-state"],
-  [14, "East", "North Dakota State", "north-dakota-state"],
-  [7, "East", "UCLA", "ucla"],
-  [10, "East", "UCF", "central-florida"],
-  [2, "East", "Connecticut", "connecticut"],
-  [15, "East", "Furman", "furman"],
-  [1, "South", "Florida", "florida"],
-  [16, "South", "Prairie View", "prairie-view"],
-  [8, "South", "Clemson", "clemson"],
-  [9, "South", "Iowa", "iowa"],
-  [5, "South", "Vanderbilt", "vanderbilt"],
-  [12, "South", "McNeese State", "mcneese-state"],
-  [4, "South", "Nebraska", "nebraska"],
-  [13, "South", "Troy", "troy"],
-  [6, "South", "North Carolina", "north-carolina"],
-  [11, "South", "Virginia Commonwealth", "virginia-commonwealth"],
-  [3, "South", "Illinois", "illinois"],
-  [14, "South", "Pennsylvania", "pennsylvania"],
-  [7, "South", "Saint Mary's (CA)", "saint-marys-ca"],
-  [10, "South", "Texas A&M", "texas-am"],
-  [2, "South", "Houston", "houston"],
-  [15, "South", "Idaho", "idaho"],
-  [1, "West", "Arizona", "arizona"],
-  [16, "West", "Long Island University", "long-island-university"],
-  [8, "West", "Villanova", "villanova"],
-  [9, "West", "Utah State", "utah-state"],
-  [5, "West", "Wisconsin", "wisconsin"],
-  [12, "West", "High Point", "high-point"],
-  [4, "West", "Arkansas", "arkansas"],
-  [13, "West", "Hawaii", "hawaii"],
-  [6, "West", "Brigham Young", "brigham-young"],
-  [11, "West", "Texas", "texas"],
-  [3, "West", "Gonzaga", "gonzaga"],
-  [14, "West", "Kennesaw State", "kennesaw-state"],
-  [7, "West", "Miami (FL)", "miami-fl"],
-  [10, "West", "Missouri", "missouri"],
-  [2, "West", "Purdue", "purdue"],
-  [15, "West", "Queens (NC)", "queens-nc"],
-  [1, "Midwest", "Michigan", "michigan"],
-  [16, "Midwest", "Howard", "howard"],
-  [8, "Midwest", "Georgia", "georgia"],
-  [9, "Midwest", "Saint Louis", "saint-louis"],
-  [5, "Midwest", "Texas Tech", "texas-tech"],
-  [12, "Midwest", "Akron", "akron"],
-  [4, "Midwest", "Alabama", "alabama"],
-  [13, "Midwest", "Hofstra", "hofstra"],
-  [6, "Midwest", "Tennessee", "tennessee"],
-  [11, "Midwest", "Miami (OH)", "miami-oh"],
-  [3, "Midwest", "Virginia", "virginia"],
-  [14, "Midwest", "Wright State", "wright-state"],
-  [7, "Midwest", "Kentucky", "kentucky"],
-  [10, "Midwest", "Santa Clara", "santa-clara"],
-  [2, "Midwest", "Iowa State", "iowa-state"],
-  [15, "Midwest", "Tennessee State", "tennessee-state"],
-];
-
-function makeTeam([seed, region, name, slug]) {
-  return { seed, region, name, slug, elo: ELO_BY_SLUG[slug] };
+function makeTeam([seed, region, name, slug], eloBySlug) {
+  return { seed, region, name, slug, elo: eloBySlug[slug] };
 }
 
-export const TEAM_BY_SLUG = new Map(TEAMS.map((t) => [t[3], makeTeam(t)]));
-
-export const TEAM_BY_REGION_AND_SEED = new Map(
-  TEAMS.map((t) => [`${t[1]}|${t[0]}`, makeTeam(t)])
-);
-
-export function getTeamBySlug(slug) {
-  return TEAM_BY_SLUG.get(slug);
+function buildRoster(teams, regions, eloBySlug) {
+  const teamBySlug = new Map(teams.map((t) => [t[3], makeTeam(t, eloBySlug)]));
+  const teamByRegionAndSeed = new Map(
+    teams.map((t) => [`${t[1]}|${t[0]}`, makeTeam(t, eloBySlug)])
+  );
+  return { teams, regions, teamBySlug, teamByRegionAndSeed, eloBySlug };
 }
 
-export function getTeamByRegionAndSeed(region, seed) {
-  return TEAM_BY_REGION_AND_SEED.get(`${region}|${seed}`);
+const MEN = buildRoster(TEAMS_MEN, REGIONS_MEN, ELO_BY_SLUG_MEN);
+const WOMEN = buildRoster(TEAMS_WOMEN, REGIONS_WOMEN, ELO_BY_SLUG_WOMEN);
+
+export const REGIONS = MEN.regions;
+export const TEAMS = MEN.teams;
+export const TEAM_BY_SLUG = MEN.teamBySlug;
+export const TEAM_BY_REGION_AND_SEED = MEN.teamByRegionAndSeed;
+export const ELO_BY_SLUG = MEN.eloBySlug;
+
+export function getRosterForTournament(tournament = getSelectedTournament()) {
+  return tournament === TOURNAMENTS.WOMEN ? WOMEN : MEN;
+}
+
+export function getRegions(tournament = getSelectedTournament()) {
+  return getRosterForTournament(tournament).regions;
+}
+
+export function getEloBySlug(tournament = getSelectedTournament()) {
+  return getRosterForTournament(tournament).eloBySlug;
+}
+
+export function getTeamBySlug(slug, tournament = getSelectedTournament()) {
+  return getRosterForTournament(tournament).teamBySlug.get(slug);
+}
+
+export function getTeamByRegionAndSeed(region, seed, tournament = getSelectedTournament()) {
+  return getRosterForTournament(tournament).teamByRegionAndSeed.get(`${region}|${seed}`);
 }
 

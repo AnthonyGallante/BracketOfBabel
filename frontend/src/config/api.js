@@ -1,4 +1,5 @@
 import { resolveLocalApi } from "./localApiFallback.js";
+import { TOURNAMENTS, getSelectedTournament } from "../engine/tournamentState.js";
 const DEFAULT_API_BASE_URL = "";
 
 export function getApiBaseUrl() {
@@ -14,6 +15,10 @@ export function apiUrl(path) {
 }
 
 export async function apiGetJson(path) {
+  if (path.startsWith("/api/") && getSelectedTournament() === TOURNAMENTS.WOMEN) {
+    // Backend currently serves men's dataset; women's mode is computed locally.
+    return resolveLocalApi(path);
+  }
   try {
     const res = await fetch(apiUrl(path), { method: "GET" });
     if (!res.ok) {

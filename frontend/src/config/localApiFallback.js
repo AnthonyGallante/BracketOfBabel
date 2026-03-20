@@ -7,7 +7,7 @@ import {
   bracketFromInt,
 } from "../engine/bracketEngine.js";
 import { eloWinProbability } from "../engine/elo.js";
-import { ELO_BY_SLUG } from "../engine/eloRatings.generated.js";
+import { getEloBySlug } from "../engine/teams.js";
 
 function parseQuery(urlPath) {
   const u = new URL(urlPath, "https://local.invalid");
@@ -22,9 +22,10 @@ function parseBracketId(idText) {
 }
 
 function withEloWinProbabilities(bracket) {
+  const eloBySlug = getEloBySlug();
   const toProbGame = (game) => {
-    const topElo = ELO_BY_SLUG[game.top_team.slug];
-    const bottomElo = ELO_BY_SLUG[game.bottom_team.slug];
+    const topElo = eloBySlug[game.top_team.slug];
+    const bottomElo = eloBySlug[game.bottom_team.slug];
     const topWin = eloWinProbability(topElo, bottomElo);
     return {
       ...game,
@@ -49,7 +50,7 @@ function withEloWinProbabilities(bracket) {
 }
 
 function toEloMap() {
-  return ELO_BY_SLUG;
+  return getEloBySlug();
 }
 
 function listBrackets(path) {

@@ -9,6 +9,7 @@ export default function Pagination({
   queryKey = "page",
   basePath = "/browse",
   ariaLabel = "Pagination",
+  extraQueryParams = {},
 }) {
   // BigInt-only pagination. Never cast pages to Number.
   const navigate = useNavigate();
@@ -19,7 +20,12 @@ export default function Pagination({
   }, [currentPage]);
 
   const go = (pageBig) => {
-    navigate(`${basePath}?${queryKey}=${pageBig.toString()}`);
+    const query = new URLSearchParams();
+    query.set(queryKey, pageBig.toString());
+    Object.entries(extraQueryParams).forEach(([k, v]) => {
+      if (v !== undefined && v !== null && String(v) !== "") query.set(k, String(v));
+    });
+    navigate(`${basePath}?${query.toString()}`);
   };
 
   const onSubmit = (e) => {
@@ -73,7 +79,7 @@ export default function Pagination({
           disabled={currentPage <= 0n}
           aria-label="Previous Page"
         >
-          Previous
+          ← Previous
         </button>
 
         <form onSubmit={onSubmit} className="flex items-center gap-2">
@@ -92,7 +98,7 @@ export default function Pagination({
               setInput((prev) => `${prev}${sanitizeDigits(text)}`);
             }}
             onDrop={(e) => e.preventDefault()}
-            className="w-40 rounded border border-[var(--border)] bg-[var(--surface)] px-2 py-1 text-sm outline-none"
+            className="w-40 rounded border border-[var(--border)] bg-[var(--surface)] px-2 py-1 text-center font-mono text-sm outline-none"
             aria-label="Page number input"
             type="text"
             inputMode="numeric"
@@ -113,7 +119,7 @@ export default function Pagination({
           disabled={currentPage + 1n >= totalPages}
           aria-label="Next Page"
         >
-          Next
+          Next →
         </button>
 
         <button

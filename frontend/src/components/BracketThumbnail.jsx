@@ -3,8 +3,6 @@ import { Link } from "react-router-dom";
 import { bracketFromInt } from "../engine/bracketEngine.js";
 import { formatInteger } from "./bracket/bracketUtils.js";
 
-const REGIONS = ["East", "South", "West", "Midwest"];
-
 function parseBracketId(id) {
   try {
     return BigInt(id);
@@ -17,13 +15,13 @@ function getRegionWinnersById(id) {
   const n = parseBracketId(id);
   if (n === null) return null;
   const decoded = bracketFromInt(n);
+  const regions = decoded.rounds.elite_8.map((game) => game.region);
 
-  // elite_8 ordering is East, South, West, Midwest (one game each).
   const winners = {};
   decoded.rounds.elite_8.forEach((game, idx) => {
-    winners[REGIONS[idx]] = game.winner;
+    winners[regions[idx]] = game.winner;
   });
-  return winners;
+  return { winners, regions };
 }
 
 function BitsPreviewSvg({ bits }) {
@@ -61,7 +59,9 @@ function BitsPreviewSvg({ bits }) {
 }
 
 export default function BracketThumbnail({ id, bitsPreview, champion }) {
-  const regionWinners = React.useMemo(() => getRegionWinnersById(id), [id]);
+  const regionInfo = React.useMemo(() => getRegionWinnersById(id), [id]);
+  const regions = regionInfo?.regions ?? [];
+  const regionWinners = regionInfo?.winners ?? {};
   const [logoError, setLogoError] = React.useState(false);
   const winnerLogoUrl = `https://cdn.ssref.net/req/202510241/tlogo/ncaa/${champion.slug}-2025.png`;
 
@@ -69,30 +69,32 @@ export default function BracketThumbnail({ id, bitsPreview, champion }) {
     <Link
       to={`/bracket/${id}`}
       className={[
-        "group block rounded border border-[var(--border)] bg-[var(--surface)] p-3",
+        "group block rounded border border-[var(--border)] bg-[var(--surface)] p-2.5",
         "transition-transform duration-150 hover:-translate-y-0.5 hover:border-[var(--accent)]",
       ].join(" ")}
       aria-label={`Open bracket ${formatInteger(id)}. Champion ${champion.name}`}
     >
-      <div className="font-mono text-[11px] text-[var(--text-muted)]">#{formatInteger(id)}</div>
-      <div className="mt-1 flex items-center gap-2">
-        <span className="flex h-5 w-5 items-center justify-center overflow-hidden rounded border border-[var(--border)] bg-[var(--surface)]">
+      <div className="flex items-center justify-between gap-2">
+        <div className="min-w-0">
+          <div className="font-mono text-[10px] text-[var(--text-muted)]">#{formatInteger(id)}</div>
+          <div className="truncate text-sm font-semibold text-[var(--text)]">{champion.name}</div>
+        </div>
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded border border-[var(--border)] bg-[var(--surface)] shadow-[0_8px_16px_-12px_rgba(74,158,255,0.55)]">
           {logoError ? (
-            <span className="font-mono text-[10px] text-[var(--text-muted)]">
+            <span className="font-mono text-xs text-[var(--text-muted)]">
               {champion.seed}
             </span>
           ) : (
             <img
               src={winnerLogoUrl}
               alt={`${champion.name} logo`}
-              className="h-4 w-4 object-contain"
+              className="h-7 w-7 object-contain"
               onError={() => setLogoError(true)}
             />
           )}
         </span>
-        <div className="truncate text-sm font-semibold text-[var(--text)]">{champion.name}</div>
       </div>
-      <div className="mt-2 rounded border border-[var(--border)] px-1 py-1">
+      <div className="mt-2 rounded border border-[var(--border)] px-1 py-0.5">
         <BitsPreviewSvg bits={bitsPreview} />
       </div>
 
@@ -106,7 +108,7 @@ export default function BracketThumbnail({ id, bitsPreview, champion }) {
       >
         <div className="font-mono text-[10px] text-[var(--text-muted)]">Region winners</div>
         <div className="mt-1 grid grid-cols-2 gap-x-3 gap-y-1 text-xs">
-          {REGIONS.map((region) => (
+          {regions.map((region) => (
             <div key={region} className="flex items-center justify-between gap-2">
               <span className="text-[var(--text-muted)]">{region}</span>
               <span className="truncate text-[var(--text)]" title={regionWinners?.[region]?.name || "N/A"}>

@@ -5,7 +5,7 @@
 // - bracketFromInt(n): BigInt -> structured bracket object
 // - intFromBracket(bits): bits[63] -> BigInt
 
-import { REGIONS, getTeamByRegionAndSeed } from "./teams.js";
+import { getRegions, getTeamByRegionAndSeed } from "./teams.js";
 import { TOTAL_BITS } from "./constants.js";
 
 // Round of 64 matchups within each region. Tuple order defines "top" vs "bottom".
@@ -53,6 +53,8 @@ export function bracketFromInt(n) {
   // Returns a structured bracket object matching backend schema closely.
   assertBigIntInRange(n);
   const bits = bitsFromInt(n);
+
+  const REGIONS = getRegions();
 
   // Winners are propagated within each region.
   const round64Winners = REGIONS.map(() => new Array(8).fill(null));

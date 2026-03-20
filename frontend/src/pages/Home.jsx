@@ -4,6 +4,11 @@ import { MAX_BRACKET_ID, TOTAL_BRACKET_COUNT } from "../engine/bracketEngine.js"
 import { setDocumentMeta } from "../utils/meta.js";
 import { parseBoundedBigInt, sanitizeDigits } from "../utils/numericInput.js";
 import { formatInteger } from "../components/bracket/bracketUtils.js";
+import {
+  TOURNAMENTS,
+  getSelectedTournament,
+  setSelectedTournament,
+} from "../engine/tournamentState.js";
 import "./home.css";
 
 /** Large primary nav actions — sporty monospace + hover motion from home.css */
@@ -28,6 +33,7 @@ export default function Home() {
   const navigate = useNavigate();
   const [lookup, setLookup] = React.useState("");
   const [lookupError, setLookupError] = React.useState("");
+  const [tournament, setTournament] = React.useState(getSelectedTournament());
 
   React.useEffect(() => {
     const title = "Bracket Archive";
@@ -53,6 +59,11 @@ export default function Home() {
       return;
     }
     navigate(`/bracket/${id.toString()}`);
+  };
+
+  const selectTournament = (value) => {
+    const next = setSelectedTournament(value);
+    setTournament(next);
   };
 
   const iconFind = (
@@ -85,10 +96,11 @@ export default function Home() {
       <div className="relative z-10 mx-auto flex max-w-3xl flex-col items-center">
         {/* Simple top header */}
         <header className="mt-2 text-center sm:mt-4" aria-label="Archive header">
-          <h1 className="bg-gradient-to-br from-[var(--text)] via-[var(--accent)] to-[var(--win)] bg-clip-text font-mono text-3xl font-bold leading-tight tracking-tight text-transparent sm:text-5xl">
-            {formatInteger(TOTAL_BRACKET_COUNT)} brackets.
+          <h1 className="bg-gradient-to-br from-[var(--text)] via-[var(--accent)] to-[var(--win)] bg-clip-text font-mono text-[clamp(1.35rem,7vw,3rem)] font-bold leading-tight tracking-tight text-transparent">
+            <span className="inline-block break-all sm:break-normal">{formatInteger(TOTAL_BRACKET_COUNT)}</span>{" "}
+            brackets.
           </h1>
-          <p className="mt-2 font-mono text-xl font-semibold text-[var(--text)] sm:text-3xl">
+          <p className="mt-2 font-mono text-[clamp(1.05rem,5.2vw,1.85rem)] font-semibold text-[var(--text)]">
             All of them here.
           </p>
         </header>
@@ -164,6 +176,43 @@ export default function Home() {
                 {lookupError}
               </div>
             )}
+          </div>
+        </section>
+
+        <section className="mt-10 w-full max-w-xl sm:mt-12" aria-label="Tournament toggle">
+          <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)]/95 p-4 text-center backdrop-blur-sm sm:p-5">
+            <div className="font-mono text-xs font-semibold uppercase tracking-widest text-[var(--accent)]">
+              Tournament
+            </div>
+            <p className="mt-2 text-sm text-[var(--text-muted)]">
+              Select which 2026 bracket universe to browse.
+            </p>
+            <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
+              <button
+                type="button"
+                className={[
+                  "rounded-xl border px-4 py-2.5 text-sm font-semibold transition",
+                  tournament === TOURNAMENTS.MEN
+                    ? "border-[var(--accent)] bg-[color:rgba(74,158,255,0.18)] text-[var(--text)]"
+                    : "border-[var(--border)] text-[var(--text-muted)] hover:border-[var(--accent)] hover:text-[var(--text)]",
+                ].join(" ")}
+                onClick={() => selectTournament(TOURNAMENTS.MEN)}
+              >
+                Men&apos;s Tournament
+              </button>
+              <button
+                type="button"
+                className={[
+                  "rounded-xl border px-4 py-2.5 text-sm font-semibold transition",
+                  tournament === TOURNAMENTS.WOMEN
+                    ? "border-[var(--accent)] bg-[color:rgba(74,158,255,0.18)] text-[var(--text)]"
+                    : "border-[var(--border)] text-[var(--text-muted)] hover:border-[var(--accent)] hover:text-[var(--text)]",
+                ].join(" ")}
+                onClick={() => selectTournament(TOURNAMENTS.WOMEN)}
+              >
+                Women&apos;s Tournament
+              </button>
+            </div>
           </div>
         </section>
       </div>
