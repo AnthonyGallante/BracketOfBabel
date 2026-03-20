@@ -1,3 +1,4 @@
+import { resolveLocalApi } from "./localApiFallback.js";
 const DEFAULT_API_BASE_URL = "";
 
 export function getApiBaseUrl() {
@@ -13,11 +14,19 @@ export function apiUrl(path) {
 }
 
 export async function apiGetJson(path) {
-  const res = await fetch(apiUrl(path), { method: "GET" });
-  if (!res.ok) {
-    const text = await res.text().catch(() => "");
-    throw new Error(`GET ${path} failed: ${res.status} ${text}`);
+  try {
+    const res = await fetch(apiUrl(path), { method: "GET" });
+    if (!res.ok) {
+      // Static hosts (e.g. GitHub Pages) do not provide /api routes.
+      // Fall back to local deterministic compute for supported endpoints.
+      if (path.startsWith("/api/")) return resolveLocalApi(path);
+      const text = await res.text().catch(() => "");
+      throw new Error(`GET ${path} failed: ${res.status} ${text}`);
+    }
+    return res.json();
+  } catch (err) {
+    if (path.startsWith("/api/")) return resolveLocalApi(path);
+    throw err;
   }
-  return res.json();
 }
 

@@ -41,5 +41,9 @@ After save, GitHub will publish `docs/index.html` as your site root.
 
 - The app uses hash routing in GitHub mode, so links look like:
   - `https://<user>.github.io/<repo>/#/browse`
-- If your API is hosted separately, set `VITE_API_BASE_URL` when building so frontend requests point to that backend.
+- For static-only GitHub Pages, the frontend now includes a local deterministic fallback for:
+  - `GET /api/brackets/?page=...`
+  - `GET /api/bracket/<id>/`
+  - `GET /api/bracket/<id>/probability/`
+- If your API is hosted separately, set `VITE_API_BASE_URL` when building so frontend requests point to that backend (recommended for full parity with backend probability logic).
 
