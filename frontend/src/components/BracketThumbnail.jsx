@@ -64,6 +64,9 @@ export default function BracketThumbnail({ id, bitsPreview, champion }) {
   const regionWinners = regionInfo?.winners ?? {};
   const [logoError, setLogoError] = React.useState(false);
   const winnerLogoUrl = teamLogoUrl(champion);
+  React.useEffect(() => {
+    setLogoError(false);
+  }, [winnerLogoUrl]);
 
   return (
     <Link
@@ -86,6 +89,7 @@ export default function BracketThumbnail({ id, bitsPreview, champion }) {
             </span>
           ) : (
             <img
+              key={winnerLogoUrl}
               src={winnerLogoUrl}
               alt={`${champion.name} logo`}
               className="h-7 w-7 object-contain"
