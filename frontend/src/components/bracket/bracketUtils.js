@@ -13,6 +13,8 @@ export function clampZoom(zoom) {
 export function teamLogoUrl(team) {
   // Requirements-provided logo URL formula (do not cache/redistribute).
   const logoSlugByTeamSlug = {
+    // Explicit overrides for Sports Reference hyperlink slugs.
+    "tennessee-state": "tennessee-state",
     "usc": "southern-california",
     "uc-san-diego": "california-san-diego",
     "utsa": "texas-san-antonio",
