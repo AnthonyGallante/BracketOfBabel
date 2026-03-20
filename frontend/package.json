@@ -4,10 +4,11 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
+    "prebuild": "node scripts/generate-elo-ratings.mjs",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "build:github": "vite build --mode github --base=./ && node scripts/prepare-github-pages.mjs"
+    "build:github": "node scripts/generate-elo-ratings.mjs && vite build --mode github --base=./ && node scripts/prepare-github-pages.mjs"
   },
   "dependencies": {
     "react": "^19.0.0",

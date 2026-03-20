@@ -2,12 +2,12 @@ import {
   BRACKETS_PER_PAGE,
   MAX_BRACKET_ID,
   TOTAL_BRACKET_COUNT,
+  bracketLogProbability,
+  bracketProbability,
   bracketFromInt,
 } from "../engine/bracketEngine.js";
-
-const APPROX_TOP_WIN_PROBABILITY = 0.5;
-const APPROX_LOG_PROBABILITY = 63 * Math.log(0.5);
-const APPROX_PROBABILITY = Math.exp(APPROX_LOG_PROBABILITY);
+import { eloWinProbability } from "../engine/elo.js";
+import { ELO_BY_SLUG } from "../engine/eloRatings.generated.js";
 
 function parseQuery(urlPath) {
   const u = new URL(urlPath, "https://local.invalid");
@@ -21,26 +21,35 @@ function parseBracketId(idText) {
   return n;
 }
 
-function withApproxWinProbabilities(bracket) {
-  const patchGame = (game) => ({
-    ...game,
-    top_win_probability: APPROX_TOP_WIN_PROBABILITY,
-    bottom_win_probability: APPROX_TOP_WIN_PROBABILITY,
-  });
+function withEloWinProbabilities(bracket) {
+  const toProbGame = (game) => {
+    const topElo = ELO_BY_SLUG[game.top_team.slug];
+    const bottomElo = ELO_BY_SLUG[game.bottom_team.slug];
+    const topWin = eloWinProbability(topElo, bottomElo);
+    return {
+      ...game,
+      top_win_probability: topWin,
+      bottom_win_probability: 1.0 - topWin,
+    };
+  };
 
   return {
     ...bracket,
-    games: bracket.games.map(patchGame),
+    games: bracket.games.map(toProbGame),
     rounds: {
       ...bracket.rounds,
-      round_of_64: bracket.rounds.round_of_64.map(patchGame),
-      round_of_32: bracket.rounds.round_of_32.map(patchGame),
-      sweet_16: bracket.rounds.sweet_16.map(patchGame),
-      elite_8: bracket.rounds.elite_8.map(patchGame),
-      final_four: bracket.rounds.final_four.map(patchGame),
-      championship: bracket.rounds.championship.map(patchGame),
+      round_of_64: bracket.rounds.round_of_64.map(toProbGame),
+      round_of_32: bracket.rounds.round_of_32.map(toProbGame),
+      sweet_16: bracket.rounds.sweet_16.map(toProbGame),
+      elite_8: bracket.rounds.elite_8.map(toProbGame),
+      final_four: bracket.rounds.final_four.map(toProbGame),
+      championship: bracket.rounds.championship.map(toProbGame),
     },
   };
+}
+
+function toEloMap() {
+  return ELO_BY_SLUG;
 }
 
 function listBrackets(path) {
@@ -71,7 +80,7 @@ function getBracket(path) {
   if (!m) return null;
   const id = parseBracketId(m[1]);
   if (id === null) throw new Error("Invalid bracket id");
-  return withApproxWinProbabilities(bracketFromInt(id));
+  return withEloWinProbabilities(bracketFromInt(id));
 }
 
 function getBracketProbability(path) {
@@ -79,10 +88,11 @@ function getBracketProbability(path) {
   if (!m) return null;
   const id = parseBracketId(m[1]);
   if (id === null) throw new Error("Invalid bracket id");
+  const elo = toEloMap();
   return {
     id: id.toString(),
-    probability: APPROX_PROBABILITY,
-    log_probability: APPROX_LOG_PROBABILITY,
+    probability: bracketProbability(id, elo),
+    log_probability: bracketLogProbability(id, elo),
   };
 }
 

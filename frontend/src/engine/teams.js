@@ -1,5 +1,6 @@
 // Team roster constants for the frontend bracket engine.
 // Mirrors `backend/brackets/teams.py`.
+import { ELO_BY_SLUG } from "./eloRatings.generated.js";
 
 export const REGIONS = ["East", "South", "West", "Midwest"];
 
@@ -72,7 +73,7 @@ export const TEAMS = [
 ];
 
 function makeTeam([seed, region, name, slug]) {
-  return { seed, region, name, slug };
+  return { seed, region, name, slug, elo: ELO_BY_SLUG[slug] };
 }
 
 export const TEAM_BY_SLUG = new Map(TEAMS.map((t) => [t[3], makeTeam(t)]));
