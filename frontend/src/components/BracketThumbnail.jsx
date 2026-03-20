@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { bracketFromInt } from "../engine/bracketEngine.js";
-import { formatInteger } from "./bracket/bracketUtils.js";
+import { formatInteger, teamLogoUrl } from "./bracket/bracketUtils.js";
 
 function parseBracketId(id) {
   try {
@@ -63,7 +63,7 @@ export default function BracketThumbnail({ id, bitsPreview, champion }) {
   const regions = regionInfo?.regions ?? [];
   const regionWinners = regionInfo?.winners ?? {};
   const [logoError, setLogoError] = React.useState(false);
-  const winnerLogoUrl = `https://cdn.ssref.net/req/202510241/tlogo/ncaa/${champion.slug}-2025.png`;
+  const winnerLogoUrl = teamLogoUrl(champion);
 
   return (
     <Link

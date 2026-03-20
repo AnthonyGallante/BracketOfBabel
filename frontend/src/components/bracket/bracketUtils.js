@@ -12,7 +12,16 @@ export function clampZoom(zoom) {
 
 export function teamLogoUrl(team) {
   // Requirements-provided logo URL formula (do not cache/redistribute).
-  return `https://cdn.ssref.net/req/202510241/tlogo/ncaa/${team.slug}-2025.png`;
+  const logoSlugByTeamSlug = {
+    "usc": "southern-california",
+    "uc-san-diego": "california-san-diego",
+    "utsa": "texas-san-antonio",
+    "ole-miss": "mississippi",
+    "charleston": "college-of-charleston",
+    "lsu": "louisiana-state",
+  };
+  const slug = logoSlugByTeamSlug[team.slug] ?? team.slug;
+  return `https://cdn.ssref.net/req/202510241/tlogo/ncaa/${slug}-2025.png`;
 }
 
 export function formatProbSci(p) {

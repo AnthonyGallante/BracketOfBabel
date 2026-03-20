@@ -13,14 +13,14 @@ import {
   matchingBracketCount,
   parsePageOrZero,
 } from "../components/find/findUtils.js";
-import { formatInteger } from "../components/bracket/bracketUtils.js";
+import { formatInteger, teamLogoUrl } from "../components/bracket/bracketUtils.js";
 import "./home.css";
 
 const FIND_RESULTS_PER_PAGE = 20n;
 
 function TeamChip({ team }) {
   const [logoError, setLogoError] = React.useState(false);
-  const logoUrl = `https://cdn.ssref.net/req/202510241/tlogo/ncaa/${team.slug}-2025.png`;
+  const logoUrl = teamLogoUrl(team);
 
   return (
     <span className="inline-flex items-center gap-2 min-w-0">
