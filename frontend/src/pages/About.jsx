@@ -27,7 +27,8 @@ export default function About() {
           About Bracket Archive
         </h1>
         <p className="mt-4 text-base leading-relaxed text-[var(--text-muted)]">
-          This site is inspired by{" "}
+          I am a data scientist who, upon learning that his bracket had already been busted, decided the only
+          sensible response was to generate all of them instead. This site is inspired by{" "}
           <a
             href="https://libraryofbabel.info/"
             target="_blank"
@@ -36,11 +37,18 @@ export default function About() {
           >
             Library of Babel
           </a>
-          : instead of storing a giant database, it deterministically indexes every possible tournament bracket
+          : rather than storing a giant database, it deterministically indexes every possible tournament bracket
           by treating each game outcome as one binary bit (63 games total), so every bracket is a unique 63-bit
           sequence and therefore a unique integer from 0 to {formatInteger(TOTAL_BRACKET_COUNT - 1n)} (for{" "}
-          {formatInteger(TOTAL_BRACKET_COUNT)} total brackets); given an ID, the app decodes those bits to
+          {formatInteger(TOTAL_BRACKET_COUNT)} total brackets). Given an ID, the app decodes those bits to
           reconstruct the full bracket on demand, and given a bracket, it can encode back to the same ID.
+        </p>
+        <p className="mt-4 text-base leading-relaxed text-[var(--text-muted)]">
+          In the spirit of Bertrand Russell&apos;s mathematical philosophy, this project also plays with a simple
+          ontological question: did the number 4,126,854,991,024,748 exist before it appeared on this page? If
+          numbers can be said to exist independently of us, and an algorithm maps each valid number to exactly one
+          bracket, then there is a reasonable argument that these brackets also exist in a real mathematical sense;
+          this site just makes that space navigable.
         </p>
       </div>
     </div>
