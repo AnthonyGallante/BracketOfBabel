@@ -15,6 +15,7 @@ import {
 } from "../components/find/findUtils.js";
 import { formatInteger, teamLogoUrl } from "../components/bracket/bracketUtils.js";
 import { useSelectedTournament } from "../hooks/useSelectedTournament.js";
+import { compactTeamDisplayName } from "../utils/teamDisplayName.js";
 import "./home.css";
 
 const FIND_RESULTS_PER_PAGE = 20n;
@@ -22,22 +23,25 @@ const FIND_RESULTS_PER_PAGE = 20n;
 function TeamChip({ team }) {
   const [logoError, setLogoError] = React.useState(false);
   const logoUrl = teamLogoUrl(team);
+  const shortName = compactTeamDisplayName(team);
 
   return (
-    <span className="inline-flex items-center gap-2 min-w-0">
-      <span className="flex h-5 w-5 items-center justify-center overflow-hidden rounded border border-[var(--border)] bg-[var(--surface)]">
+    <span className="inline-flex min-w-0 max-w-full items-center gap-1.5 sm:gap-2">
+      <span className="flex h-5 w-5 shrink-0 items-center justify-center overflow-hidden rounded border border-[var(--border)] bg-[var(--surface)]">
         {logoError ? (
           <span className="font-mono text-[10px] text-[var(--text-muted)]">{team.seed}</span>
         ) : (
           <img
             src={logoUrl}
-            alt={`${team.name} logo`}
+            alt=""
             className="h-4 w-4 object-contain"
             onError={() => setLogoError(true)}
           />
         )}
       </span>
-      <span className="truncate text-[var(--text)]">{team.name}</span>
+      <span className="min-w-0 truncate text-left text-[var(--text)]" title={team.name}>
+        {shortName}
+      </span>
     </span>
   );
 }
@@ -179,10 +183,11 @@ export default function FindPage() {
                         <div className="mb-2 font-mono text-[11px] text-[var(--text-muted)]">
                           Game {idx} {selected === null ? "(?)" : `(bit ${selected})`}
                         </div>
-                        <div className="grid grid-cols-3 gap-2">
+                        <div className="flex min-w-0 gap-2">
                           <button
+                            type="button"
                             className={[
-                              "rounded border px-2 py-1.5 text-xs text-left transition-colors",
+                              "min-w-0 flex-1 rounded border px-2 py-1.5 text-xs text-left transition-colors",
                               selected === 0
                                 ? "border-[var(--accent)] bg-[color:rgba(74,158,255,0.15)] text-[var(--text)]"
                                 : "border-[var(--border)] bg-[color:rgba(61,66,82,0.35)] text-[var(--text)] hover:border-[var(--accent)]",
@@ -194,8 +199,9 @@ export default function FindPage() {
                             <TeamChip team={game.top_team} />
                           </button>
                           <button
+                            type="button"
                             className={[
-                              "rounded border px-2 py-1.5 text-xs text-left transition-colors",
+                              "min-w-0 flex-1 rounded border px-2 py-1.5 text-xs text-left transition-colors",
                               selected === 1
                                 ? "border-[var(--accent-warm)] bg-[color:rgba(245,166,35,0.16)] text-[var(--text)]"
                                 : "border-[var(--border)] bg-[color:rgba(61,66,82,0.35)] text-[var(--text)] hover:border-[var(--accent-warm)]",
@@ -207,8 +213,9 @@ export default function FindPage() {
                             <TeamChip team={game.bottom_team} />
                           </button>
                           <button
+                            type="button"
                             className={[
-                              "rounded border px-2 py-1.5 text-xs transition-colors",
+                              "flex h-full min-h-[2.5rem] w-9 shrink-0 items-center justify-center rounded border px-1 text-sm font-semibold transition-colors",
                               selected === null
                                 ? "border-[var(--text-muted)] bg-[color:rgba(90,96,112,0.12)] text-[var(--text)]"
                                 : "border-[var(--border)] bg-[color:rgba(61,66,82,0.3)] text-[var(--text-muted)] hover:border-[var(--text-muted)]",

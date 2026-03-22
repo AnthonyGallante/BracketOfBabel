@@ -1,8 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { bracketFromInt } from "../engine/bracketEngine.js";
+import { TOURNAMENTS } from "../engine/tournamentState.js";
+import { REGIONS_WOMEN } from "../engine/teamsWomen.js";
 import { formatInteger, teamLogoUrl } from "./bracket/bracketUtils.js";
 import { useSelectedTournament } from "../hooks/useSelectedTournament.js";
+import { compactTeamDisplayName } from "../utils/teamDisplayName.js";
 
 function parseBracketId(id) {
   try {
@@ -23,6 +26,16 @@ function getRegionWinnersById(id, tournament) {
     winners[regions[idx]] = game.winner;
   });
   return { winners, regions };
+}
+
+/** Compact region label for thumbnail hover panel (men: E/W/S/M; women: R1–R4). */
+function thumbnailRegionLabel(region, tournament) {
+  if (tournament === TOURNAMENTS.WOMEN) {
+    const i = REGIONS_WOMEN.indexOf(region);
+    return i >= 0 ? `R${i + 1}` : region;
+  }
+  const men = { East: "E", South: "S", West: "W", Midwest: "M" };
+  return men[region] ?? region;
 }
 
 function BitsPreviewSvg({ bits }) {
@@ -82,7 +95,9 @@ export default function BracketThumbnail({ id, bitsPreview, champion }) {
       <div className="flex items-center justify-between gap-2">
         <div className="min-w-0">
           <div className="font-mono text-[10px] text-[var(--text-muted)]">#{formatInteger(id)}</div>
-          <div className="truncate text-sm font-semibold text-[var(--text)]">{champion.name}</div>
+          <div className="truncate text-sm font-semibold text-[var(--text)]" title={champion.name}>
+            {compactTeamDisplayName(champion)}
+          </div>
         </div>
         <span className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded border border-[var(--border)] bg-[var(--surface)] shadow-[0_8px_16px_-12px_rgba(74,158,255,0.55)]">
           {logoError ? (
@@ -113,15 +128,21 @@ export default function BracketThumbnail({ id, bitsPreview, champion }) {
         ].join(" ")}
       >
         <div className="font-mono text-[10px] text-[var(--text-muted)]">Region winners</div>
-        <div className="mt-1 grid grid-cols-2 gap-x-3 gap-y-1 text-xs">
-          {regions.map((region) => (
-            <div key={region} className="flex items-center justify-between gap-2">
-              <span className="text-[var(--text-muted)]">{region}</span>
-              <span className="truncate text-[var(--text)]" title={regionWinners?.[region]?.name || "N/A"}>
-                {regionWinners?.[region]?.name || "N/A"}
-              </span>
-            </div>
-          ))}
+        <div className="mt-1 grid grid-cols-2 gap-x-2 gap-y-1 text-xs">
+          {regions.map((region) => {
+            const w = regionWinners?.[region];
+            const full = w?.name ?? "N/A";
+            return (
+              <div key={region} className="flex min-w-0 items-center justify-between gap-1.5">
+                <span className="shrink-0 font-mono text-[var(--text-muted)]">
+                  {thumbnailRegionLabel(region, tournament)}
+                </span>
+                <span className="min-w-0 truncate text-right text-[var(--text)]" title={full}>
+                  {w ? compactTeamDisplayName(w) : "N/A"}
+                </span>
+              </div>
+            );
+          })}
         </div>
       </div>
     </Link>
