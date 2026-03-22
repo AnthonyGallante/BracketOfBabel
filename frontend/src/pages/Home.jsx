@@ -96,13 +96,13 @@ export default function Home() {
   return (
     <div className="home-shell mx-auto min-h-[calc(100vh-5rem)] max-w-5xl px-4 py-8 sm:py-12">
       <div className="relative z-10 mx-auto flex max-w-3xl flex-col items-center">
-        {/* Simple top header */}
+        {/* Simple top header  */}
         <header className="mt-2 text-center sm:mt-4" aria-label="Archive header">
           <h1 className="bg-gradient-to-br from-[var(--text)] via-[var(--accent)] to-[var(--win)] bg-clip-text font-mono text-[clamp(1.1rem,6vw,2.75rem)] font-bold leading-tight tracking-tight text-transparent">
             <span className="block tabular-nums break-all sm:break-normal">
               {formatInteger(TOTAL_BRACKET_COUNT)}
             </span>
-            <span className="mt-1 block">brackets.</span>
+            <span className="mt-1 block">brackets</span>
           </h1>
           <p className="mt-2 font-mono text-[clamp(1.05rem,5.2vw,1.85rem)] font-semibold text-[var(--text)]">
             All of them here.
