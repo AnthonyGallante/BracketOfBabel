@@ -160,6 +160,8 @@ This command:
 2. builds Vite with GitHub mode (`--mode github --base=./`),
 3. copies output to `docs/` (`index.html`, `assets/*`, `404.html`, `.nojekyll`).
 
+**After any frontend change you want on the live site:** run `npm run build:github` from `frontend/`, then **commit and push** the updated `docs/` folder (GitHub Pages serves whatever is in `/docs` on your default branch).
+
 Then enable GitHub Pages to serve from branch folder `/docs`.
 See `docs/GITHUB_DEPLOYMENT.md` for full steps.
 
@@ -168,6 +170,7 @@ See `docs/GITHUB_DEPLOYMENT.md` for full steps.
 ## User-facing pages
 
 - **Home** — quick lookup + browse/find/random navigation
+- **View remaining brackets** (`/remaining`) — same matching logic as Find, with **completed games** baked in per tournament: `frontend/src/config/liveMensBracketSelections.js` (men) and `frontend/src/config/liveWomensBracketSelections.js` (women). Uses the home-page men/women toggle; bump dates and rebuild as results come in
 - **Browse** — paged bracket thumbnails
 - **Find a Bracket** — game-by-game bit picker with live matching IDs
 - **Bracket Viewer** — full bracket tree, per-game winner highlighting, Elo tooltip probabilities
@@ -189,6 +192,8 @@ See `docs/GITHUB_DEPLOYMENT.md` for full steps.
 - Keep ID handling `BigInt`-safe.
 - Do not replace deterministic decode/encode flow with mutable bracket storage.
 - If team rosters change, update `teams.js` and regenerate Elo mapping.
+- During the tournament, update **live results** for “remaining brackets” in `frontend/src/config/liveMensBracketSelections.js` and/or `frontend/src/config/liveWomensBracketSelections.js` (same bit semantics as Find).
+
 - Keep generated file `eloRatings.generated.js` in sync with CSV via build scripts.
 
 ---

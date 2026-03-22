@@ -6,6 +6,7 @@ import Browse from "./pages/Browse.jsx";
 import BracketPage from "./pages/BracketPage.jsx";
 import RandomPage from "./pages/RandomPage.jsx";
 import FindPage from "./pages/FindPage.jsx";
+import RemainingBracketsPage from "./pages/RemainingBracketsPage.jsx";
 import About from "./pages/About.jsx";
 
 export default function App() {
@@ -21,6 +22,7 @@ export default function App() {
         <Route path="/bracket/:id" element={<BracketPage />} />
         <Route path="/random" element={<RandomPage />} />
         <Route path="/find" element={<FindPage />} />
+        <Route path="/remaining" element={<RemainingBracketsPage />} />
         <Route path="/about" element={<About />} />
 
         {/* Back-compat / default route */}

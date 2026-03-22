@@ -14,6 +14,7 @@ import {
   parsePageOrZero,
 } from "../components/find/findUtils.js";
 import { formatInteger, teamLogoUrl } from "../components/bracket/bracketUtils.js";
+import { useSelectedTournament } from "../hooks/useSelectedTournament.js";
 import "./home.css";
 
 const FIND_RESULTS_PER_PAGE = 20n;
@@ -42,6 +43,7 @@ function TeamChip({ team }) {
 }
 
 export default function FindPage() {
+  const tournament = useSelectedTournament();
   // selections[i] is one of: 0, 1, or null (unselected / "?").
   const [selections, setSelections] = React.useState(() =>
     new Array(TOTAL_BITS).fill(null),
@@ -58,7 +60,10 @@ export default function FindPage() {
     [selections],
   );
   const previewId = React.useMemo(() => intFromBracket(previewBits), [previewBits]);
-  const previewBracket = React.useMemo(() => bracketFromInt(previewId), [previewId]);
+  const previewBracket = React.useMemo(
+    () => bracketFromInt(previewId, tournament),
+    [previewId, tournament],
+  );
 
   const unknownCount = countUnknownBits(selections);
   const totalMatches = matchingBracketCount(selections);
@@ -72,14 +77,14 @@ export default function FindPage() {
 
   const stubs = React.useMemo(() => {
     return matchingIds.map((idBig) => {
-      const decoded = bracketFromInt(idBig);
+      const decoded = bracketFromInt(idBig, tournament);
       return {
         id: idBig.toString(),
         champion: decoded.champion,
         bits_preview: decoded.bits.join(""),
       };
     });
-  }, [matchingIds]);
+  }, [matchingIds, tournament]);
 
   const setPage = (p) => setSearchParams({ page: p.toString() });
 

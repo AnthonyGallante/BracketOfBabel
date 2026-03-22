@@ -2,11 +2,12 @@
 //
 // Mirror of `backend/brackets/bracket_engine.py`'s decoding logic.
 // Provides:
-// - bracketFromInt(n): BigInt -> structured bracket object
+// - bracketFromInt(n, tournament?): BigInt -> structured bracket object
 // - intFromBracket(bits): bits[63] -> BigInt
 
 import { getRegions, getTeamByRegionAndSeed } from "./teams.js";
 import { TOTAL_BITS } from "./constants.js";
+import { getSelectedTournament } from "./tournamentState.js";
 
 // Round of 64 matchups within each region. Tuple order defines "top" vs "bottom".
 // (top_seed, bottom_seed)
@@ -49,12 +50,16 @@ export function intFromBracket(bits) {
   return result;
 }
 
-export function bracketFromInt(n) {
+/**
+ * @param {bigint} n
+ * @param {string} [tournament] Roster + region labels (`men` / `women`). Defaults to `getSelectedTournament()`.
+ */
+export function bracketFromInt(n, tournament = getSelectedTournament()) {
   // Returns a structured bracket object matching backend schema closely.
   assertBigIntInRange(n);
   const bits = bitsFromInt(n);
 
-  const REGIONS = getRegions();
+  const REGIONS = getRegions(tournament);
 
   // Winners are propagated within each region.
   const round64Winners = REGIONS.map(() => new Array(8).fill(null));
@@ -82,8 +87,8 @@ export function bracketFromInt(n) {
       const bitPos = regionIdx * 8 + game64Idx;
       const bit = bits[bitPos];
 
-      const topTeam = getTeamByRegionAndSeed(region, topSeed);
-      const bottomTeam = getTeamByRegionAndSeed(region, bottomSeed);
+      const topTeam = getTeamByRegionAndSeed(region, topSeed, tournament);
+      const bottomTeam = getTeamByRegionAndSeed(region, bottomSeed, tournament);
       if (!topTeam || !bottomTeam) throw new Error("Missing team roster entry");
 
       const winner = bit === 0 ? topTeam : bottomTeam;

@@ -4,11 +4,8 @@ import { MAX_BRACKET_ID, TOTAL_BRACKET_COUNT } from "../engine/bracketEngine.js"
 import { setDocumentMeta } from "../utils/meta.js";
 import { parseBoundedBigInt, sanitizeDigits } from "../utils/numericInput.js";
 import { formatInteger } from "../components/bracket/bracketUtils.js";
-import {
-  TOURNAMENTS,
-  getSelectedTournament,
-  setSelectedTournament,
-} from "../engine/tournamentState.js";
+import { TOURNAMENTS, setSelectedTournament } from "../engine/tournamentState.js";
+import { useSelectedTournament } from "../hooks/useSelectedTournament.js";
 import "./home.css";
 
 /** Large primary nav actions — sporty monospace + hover motion from home.css */
@@ -16,14 +13,14 @@ function HomeCtaLink({ to, label, icon, ariaLabel }) {
   return (
     <Link
       to={to}
-      className="home-cta group flex min-w-[min(100%,280px)] items-center justify-center rounded-xl border-2 border-[var(--border)] bg-[var(--surface)] px-8 py-4 font-mono text-base font-semibold text-[var(--text)] shadow-sm hover:border-[var(--accent)]"
+      className="home-cta group flex min-h-[3.25rem] w-full min-w-0 items-center justify-center rounded-xl border-2 border-[var(--border)] bg-[var(--surface)] px-4 py-3 text-center font-mono text-sm font-semibold leading-snug text-[var(--text)] shadow-sm hover:border-[var(--accent)] sm:min-h-[3.5rem] sm:px-6 sm:py-4 sm:text-base"
       aria-label={ariaLabel}
     >
-      <span className="flex items-center justify-center gap-3">
-        <span className="text-[var(--accent)] transition-transform duration-300 group-hover:scale-110 group-hover:text-[var(--win)]">
+      <span className="flex min-w-0 items-center justify-center gap-2 sm:gap-3">
+        <span className="shrink-0 text-[var(--accent)] transition-transform duration-300 group-hover:scale-110 group-hover:text-[var(--win)]">
           {icon}
         </span>
-        <span>{label}</span>
+        <span className="min-w-0">{label}</span>
       </span>
     </Link>
   );
@@ -33,7 +30,7 @@ export default function Home() {
   const navigate = useNavigate();
   const [lookup, setLookup] = React.useState("");
   const [lookupError, setLookupError] = React.useState("");
-  const [tournament, setTournament] = React.useState(getSelectedTournament());
+  const tournament = useSelectedTournament();
 
   React.useEffect(() => {
     const title = "Bracket Archive";
@@ -62,8 +59,7 @@ export default function Home() {
   };
 
   const selectTournament = (value) => {
-    const next = setSelectedTournament(value);
-    setTournament(next);
+    setSelectedTournament(value);
   };
 
   const iconFind = (
@@ -90,6 +86,12 @@ export default function Home() {
       <circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none" />
     </svg>
   );
+  const iconRemaining = (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+      <path d="M9 11l3 3L22 4" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" strokeLinecap="round" />
+    </svg>
+  );
 
   return (
     <div className="home-shell mx-auto min-h-[calc(100vh-5rem)] max-w-5xl px-4 py-8 sm:py-12">
@@ -105,11 +107,17 @@ export default function Home() {
           </p>
         </header>
 
-        {/* Primary actions */}
+        {/* Primary actions: 2×2 grid on sm+ */}
         <nav
-          className="mt-10 flex w-full max-w-2xl flex-col items-center justify-center gap-4 sm:mt-12 sm:flex-row sm:flex-wrap sm:gap-5"
+          className="mt-8 grid w-full max-w-2xl grid-cols-1 gap-4 sm:mt-10 sm:grid-cols-2 sm:gap-5"
           aria-label="Primary navigation"
         >
+          <HomeCtaLink
+            to="/remaining"
+            label="View Remaining brackets"
+            icon={iconRemaining}
+            ariaLabel="View brackets still possible given completed games"
+          />
           <HomeCtaLink to="/find" label="Find a Bracket" icon={iconFind} ariaLabel="Find a Bracket" />
           <HomeCtaLink to="/browse?page=0" label="Browse" icon={iconBrowse} ariaLabel="Browse Brackets" />
           <HomeCtaLink to="/random" label="Random" icon={iconRandom} ariaLabel="Random Bracket" />

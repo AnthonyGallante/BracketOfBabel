@@ -37,6 +37,8 @@ In GitHub repository settings:
 
 After save, GitHub will publish `docs/index.html` as your site root.
 
+Whenever you change the frontend, run `npm run build:github` again and **commit the updated `docs/`** so the deployed site picks up your changes.
+
 ## Notes
 
 - The app uses hash routing in GitHub mode, so links look like:

@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { bracketFromInt } from "../engine/bracketEngine.js";
 import { formatInteger, teamLogoUrl } from "./bracket/bracketUtils.js";
+import { useSelectedTournament } from "../hooks/useSelectedTournament.js";
 
 function parseBracketId(id) {
   try {
@@ -11,10 +12,10 @@ function parseBracketId(id) {
   }
 }
 
-function getRegionWinnersById(id) {
+function getRegionWinnersById(id, tournament) {
   const n = parseBracketId(id);
   if (n === null) return null;
-  const decoded = bracketFromInt(n);
+  const decoded = bracketFromInt(n, tournament);
   const regions = decoded.rounds.elite_8.map((game) => game.region);
 
   const winners = {};
@@ -59,7 +60,8 @@ function BitsPreviewSvg({ bits }) {
 }
 
 export default function BracketThumbnail({ id, bitsPreview, champion }) {
-  const regionInfo = React.useMemo(() => getRegionWinnersById(id), [id]);
+  const tournament = useSelectedTournament();
+  const regionInfo = React.useMemo(() => getRegionWinnersById(id, tournament), [id, tournament]);
   const regions = regionInfo?.regions ?? [];
   const regionWinners = regionInfo?.winners ?? {};
   const [logoError, setLogoError] = React.useState(false);

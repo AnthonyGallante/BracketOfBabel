@@ -6,10 +6,11 @@
 
 import { eloWinProbability } from "./elo.js";
 import { bracketFromInt } from "./bracketDecode.js";
+import { getSelectedTournament } from "./tournamentState.js";
 
 export function bracketLogProbability(n, eloRatings) {
   // Product over all 63 games, represented as sum of logs to avoid underflow.
-  const bracket = bracketFromInt(n);
+  const bracket = bracketFromInt(n, getSelectedTournament());
   const bits = bracket.bits;
   let logProb = 0.0;
 
