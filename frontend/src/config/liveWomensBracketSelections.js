@@ -26,7 +26,7 @@ const LIVE_WOMENS_BRACKET_SELECTIONS = [
   // Round of 64 (games 1–32 → indices 0–31). Derived from announced winners vs R64 top/bottom order.
   0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   // Round of 32+ (indices 32–62) — not encoded in this snapshot
-  null, 1, null, null, null, 1, 1, null, null, 1, 1, 1, 0, null, null, 1,
+  0, 1, 0, 1, 0, 1, 1, 0, null, 1, 1, 1, 0, 0, 1, 1,
   null, null, null, null, null, null, null, null,
   null, null, null, null,
   null, null, 
