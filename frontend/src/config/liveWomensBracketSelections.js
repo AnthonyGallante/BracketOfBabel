@@ -8,7 +8,7 @@
  */
 
 /** ISO date string (YYYY-MM-DD) — bump when you edit results. */
-export const LIVE_WOMENS_BRACKET_UPDATED = "2026-03-23";
+export const LIVE_WOMENS_BRACKET_UPDATED = "2026-03-27";
 
 /** Short note for the UI (optional). */
 export const LIVE_WOMENS_BRACKET_NOTE =
@@ -27,7 +27,7 @@ const LIVE_WOMENS_BRACKET_SELECTIONS = [
   0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   // Round of 32+ (indices 32–62) — not encoded in this snapshot
   0, 1, 0, 1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1,
-  null, null, null, null, null, null, null, null,
+  0, 0, null, null, 0, null, null, null,
   null, null, null, null,
   null, null, 
   null,
