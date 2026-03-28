@@ -34,7 +34,7 @@ const LIVE_MENS_BRACKET_SELECTIONS = [
   // Round of 32 (games 33–48 → indices 32–47) — partial
   0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1,
   // Sweet 16+ (indices 48–62) — not started in this snapshot
-  0, 1, 0, 0, 0, 1, 0, 1, 
+  0, 1, 0, 0, 0, 1, 0, 0, 
   null, null, null, null, 
   null, null, 
   null,
