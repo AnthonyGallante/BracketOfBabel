@@ -35,7 +35,7 @@ const LIVE_MENS_BRACKET_SELECTIONS = [
   0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1,
   // Sweet 16+ (indices 48–62) — not started in this snapshot
   0, 1, 0, 0, 0, 1, 0, 0, 
-  null, null, null, null, 
+  null, 1, 0, null, 
   null, null, 
   null,
 ];
