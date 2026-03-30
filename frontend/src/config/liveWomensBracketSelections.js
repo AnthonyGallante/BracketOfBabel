@@ -28,7 +28,7 @@ const LIVE_WOMENS_BRACKET_SELECTIONS = [
   // Round of 32+ (indices 32–62) — not encoded in this snapshot
   0, 1, 0, 1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1,
   0, 0, 0, 0, 0, 0, 0, 1,
-  null, null, null, null,
+  0, null, 0, null,
   null, null, 
   null,
 ];
