@@ -8,7 +8,7 @@
  */
 
 /** ISO date string (YYYY-MM-DD) — bump when you edit results. */
-export const LIVE_WOMENS_BRACKET_UPDATED = "2026-03-27";
+export const LIVE_WOMENS_BRACKET_UPDATED = "2026-03-30";
 
 /** Short note for the UI (optional). */
 export const LIVE_WOMENS_BRACKET_NOTE =
