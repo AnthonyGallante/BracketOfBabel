@@ -14,7 +14,7 @@
  */
 
 /** ISO date string (YYYY-MM-DD) — bump when you edit results. */
-export const LIVE_MENS_BRACKET_UPDATED = "2026-04-04";
+export const LIVE_MENS_BRACKET_UPDATED = "2026-04-05";
 
 /** Short note for the UI (optional). */
 export const LIVE_MENS_BRACKET_NOTE =
