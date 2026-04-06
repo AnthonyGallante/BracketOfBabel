@@ -12,7 +12,7 @@ export const LIVE_WOMENS_BRACKET_UPDATED = "2026-04-05";
 
 /** Short note for the UI (optional). */
 export const LIVE_WOMENS_BRACKET_NOTE =
-  "Round of 64 snapshot; later rounds unknown until games finish.";
+  "Live snapshot; null bits still match all outcomes for those games.";
 
 /**
  * @returns {(number|null)[]} length 63
@@ -25,10 +25,10 @@ export function getLiveWomensBracketSelections() {
 const LIVE_WOMENS_BRACKET_SELECTIONS = [
   // Round of 64 (games 1–32 → indices 0–31). Derived from announced winners vs R64 top/bottom order.
   0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  // Round of 32+ (indices 32–62) — not encoded in this snapshot
+  // Later rounds (indices 32–62); null = unknown
   0, 1, 0, 1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1,
   0, 0, 0, 0, 0, 0, 0, 1,
   0, 0, 0, 0,
   1, 0, 
-  1,
+  0,
 ];
